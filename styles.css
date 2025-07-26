@@ -1,0 +1,27 @@
+body{
+   font-family: Georgia, serif;
+    background-color: #fff3e0;
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    /* Aumenta el tamaño base */
+    line-height: 1.6;
+    /* Interlineado - Mejora la lectura */
+}
+
+.info{
+    text-align: center;
+
+}
+
+.info h1{
+
+    color: rgb(14, 13, 13);
+}
+
+.info img{
+
+     width: 150px;
+    border: 8px solid #bec2c7;
+    border-radius: 20px;
+}
