@@ -1,1 +1,1 @@
-hoja de vida completa falta el formulario.
+hoja de vida completa
