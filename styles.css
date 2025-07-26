@@ -1,5 +1,5 @@
-body{
-   font-family: Georgia, serif;
+body {
+    font-family: Georgia, serif;
     background-color: #fff3e0;
     margin: 0;
     padding: 0;
@@ -7,6 +7,7 @@ body{
     /* Aumenta el tamaño base */
     line-height: 1.6;
     /* Interlineado - Mejora la lectura */
+ 
 }
 
 .info{
@@ -24,4 +25,21 @@ body{
      width: 150px;
     border: 8px solid #bec2c7;
     border-radius: 20px;
+}
+
+section {
+    margin: 20px 5px;
+    padding: 20px;
+    background-color: rgb(135, 180, 197);
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+h2 {
+    font-size: 22px;
+    color: #00070f;
+    border-bottom: 2px solid #b0d1fc;
+    padding-bottom: 5px;
+    margin-top: 30px;
 }
