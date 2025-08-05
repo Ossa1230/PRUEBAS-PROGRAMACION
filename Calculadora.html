@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora JavaScript</title>
+    <style>
+        /* ========================================
+           ESTILOS CSS PARA LA CALCULADORA
+           ======================================== */
+        
+        /* Estilos generales del cuerpo de la página */
+        body {
+            font-family: Arial, sans-serif;    /* Fuente clara y legible */
+            max-width: 600px;                  /* Ancho máximo para centrar contenido */
+            margin: 0 auto;                    /* Centrar horizontalmente */
+            padding: 20px;                     /* Espaciado interno */
+            background-color: #a09c9c;        /* Color de fondo gris claro */
+        }
+        
+        /* Contenedor principal de la calculadora */
+        .container {
+            background-color: rgb(219, 214, 214);           /* Fondo blanco para contraste */
+            padding: 30px;                     /* Espaciado interno generoso */
+            border-radius: 10px;               /* Bordes redondeados */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+        }
+        
+        /* Título principal de la calculadora */
+        h1 {
+            text-align: center;                /* Centrar el título */
+            color: #333;                       /* Color gris oscuro */
+            margin-bottom: 30px;               /* Espacio inferior */
+        }
+        
+        /* Contenedor para cada grupo de entrada (label + input) */
+        .input-group {
+            margin-bottom: 15px;               /* Espacio entre grupos */
+        }
+        
+        /* Estilos para las etiquetas de los campos */
+        label {
+            display: block;                    /* Mostrar en línea separada */
+            margin-bottom: 5px;                /* Espacio inferior pequeño */
+            font-weight: bold;                 /* Texto en negrita */
+            color: #555;                       /* Color gris medio */
+        }
+        
+        /* Estilos para campos de entrada y selector */
+        input, select {
+            width: 100%;                       /* Ocupar todo el ancho disponible */
+            padding: 10px;                     /* Espaciado interno */
+            border: 2px solid #ddd;            /* Borde gris claro */
+            border-radius: 5px;                /* Bordes ligeramente redondeados */
+            font-size: 16px;                   /* Tamaño de fuente legible */
+            box-sizing: border-box;            /* Incluir padding en el ancho total */
+        }
+        
+        /* Estilos para los botones */
+        button {
+            background-color: #4CAF50;         /* Verde para botón principal */
+            color: white;                      /* Texto blanco */
+            padding: 12px 24px;                /* Espaciado interno del botón */
+            border: none;                      /* Sin borde */
+            border-radius: 5px;                /* Bordes redondeados */
+            cursor: pointer;                   /* Cursor de mano al pasar sobre él */
+            font-size: 16px;                   /* Tamaño de fuente */
+            margin: 10px 5px;                  /* Espaciado entre botones */
+            transition: background-color 0.3s; /* Animación suave de color */
+        }
+        
+        /* Efecto hover para botones (al pasar el mouse) */
+        button:hover {
+            background-color: #45a049;         /* Verde más oscuro */
+        }
+        
+        /* Estilo especial para botón de reset/limpiar */
+        .reset-btn {
+            background-color: #f44336;         /* Color rojo */
+        }
+        
+        /* Efecto hover para botón de reset */
+        .reset-btn:hover {
+            background-color: #da190b;         /* Rojo más oscuro */
+        }
+        
+        /* Estilos para mostrar resultados */
+        .result {
+            background-color: #e8f5e8;         /* Fondo verde claro para éxito */
+            border: 2px solid #4CAF50;         /* Borde verde */
+            padding: 15px;                     /* Espaciado interno */
+            border-radius: 5px;                /* Bordes redondeados */
+            margin-top: 20px;                  /* Espacio superior */
+            font-size: 18px;                   /* Fuente más grande */
+            font-weight: bold;                 /* Texto en negrita */
+            text-align: center;                /* Centrar texto */
+        }
+        
+        /* Estilos para mostrar errores */
+        .error {
+            background-color: #ffebee;         /* Fondo rojo claro */
+            border: 2px solid #f44336;         /* Borde rojo */
+            color: #c62828;                    /* Texto rojo oscuro */
+        }
+        
+        /* Contenedor del historial de operaciones */
+        .history {
+            margin-top: 30px;                  /* Espacio superior */
+            padding: 20px;                     /* Espaciado interno */
+            background-color: #f9f9f9;         /* Fondo gris muy claro */
+            border-radius: 5px;                /* Bordes redondeados */
+            border: 1px solid #ddd;            /* Borde gris claro */
+        }
+        
+        /* Título del historial */
+        .history h3 {
+            margin-top: 0;                     /* Sin margen superior */
+            color: #333;                       /* Color gris oscuro */
+        }
+        
+        /* Cada elemento individual del historial */
+        .history-item {
+            padding: 8px;                      /* Espaciado interno */
+            margin: 5px 0;                     /* Espaciado vertical */
+            background-color: white;           /* Fondo blanco */
+            border-radius: 3px;                /* Bordes ligeramente redondeados */
+            border-left: 4px solid #4CAF50;    /* Borde izquierdo verde como indicador */
+        }
+        
+        /* Contenedor de controles/botones */
+        .controls {
+            text-align: center;                /* Centrar botones */
+            margin-top: 20px;                  /* Espacio superior */
+        }
+    </style> 
+</head>
+<body>
+    <!-- ========================================
+         ESTRUCTURA HTML DE LA CALCULADORA
+         ======================================== -->
+    
+    <!-- Contenedor principal que agrupa todos los elementos -->
+    <div class="container">
+        <!-- Título principal de la aplicación -->
+        <h1>Calculadora JavaScript</h1>
+        
+        <!-- ========================================
+             FORMULARIO DE ENTRADA DE DATOS
+             ======================================== -->
+        
+        <!-- Grupo de entrada para el primer número -->
+        <div class="input-group">
+            <label for="num1">Primer número:</label>
+            <input type="number" id="num1" placeholder="Ingresa el primer número">
+        </div>
+        
+        <!-- Grupo de entrada para el segundo número -->
+        <div class="input-group">
+            <label for="num2">Segundo número:</label>
+            <input type="number" id="num2" placeholder="Ingresa el segundo número">
+        </div>
+        
+        <!-- Grupo de selección para el tipo de operación -->
+        <div class="input-group">
+            <label for="operacion">Operación:</label>
+            <select id="operacion">
+                <option value="">Selecciona una operación</option>
+                <option value="suma">Suma</option>
+                <option value="resta">Resta</option>
+                <option value="multiplicacion">Multiplicación</option>
+                <option value="division">División</option>
+            </select>
+        </div>
+        
+        <!-- ========================================
+             BOTONES DE CONTROL
+             ======================================== -->
+        
+        <div class="controls">
+            <!-- Botón para realizar cálculo con la interfaz visual -->
+            <button onclick="calcular()">Calcular</button>
+            
+            <!-- Botón para limpiar todos los campos -->
+            <button onclick="limpiar()" class="reset-btn">Limpiar</button>
+            
+            <!-- Botón para iniciar el modo bucle interactivo -->
+            <button onclick="iniciarBucle()">Modo Bucle</button>
+        </div>
+        
+        <!-- ========================================
+             ÁREA DE RESULTADOS
+             ======================================== -->
+        
+        <!-- Div donde se mostrará el resultado de la operación -->
+        <div id="resultado"></div>
+        
+        <!-- ========================================
+             HISTORIAL DE OPERACIONES
+             ======================================== -->
+        
+        <!-- Sección que muestra todas las operaciones realizadas -->
+        <div class="history">
+            <h3>Historial de Operaciones</h3>
+            <!-- Contenedor dinámico donde se agregarán las operaciones -->
+            <div id="historial"></div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // PASO 1: DECLARACIÓN DE VARIABLES INICIALES
+        // ========================================
+        
+        // Variables numéricas iniciales como lo solicita el laboratorio
+        let numero1 = 10;           // Primera variable numérica con valor asignado
+        let numero2 = 5;            // Segunda variable numérica con valor asignado
+        let operacionInicial = "suma"; // Variable para almacenar la operación matemática inicial
+        
+        // Array para almacenar el historial de todas las operaciones realizadas
+        let historialOperaciones = [];
+        
+        // ========================================
+        // PASO 2: FUNCIÓN PARA REALIZAR OPERACIONES
+        // ========================================
+        
+        /**
+         * Función principal que realiza operaciones matemáticas
+         * @param {number} num1 - Primer número para la operación
+         * @param {number} num2 - Segundo número para la operación  
+         * @param {string} operacion - Tipo de operación: "suma", "resta", "multiplicacion", "division"
+         * @returns {number|string} - Resultado de la operación o mensaje de error
+         */
+        function realizarOperacion(num1, num2, operacion) {
+            
+            // ========================================
+            // PASO 3: VALIDACIONES DE DATOS Y OPERACIONES
+            // ========================================
+            
+            // Array con las operaciones matemáticas válidas permitidas
+            const operacionesValidas = ["suma", "resta", "multiplicacion", "division"];
+            
+            // Validación: Verificar que la operación ingresada sea válida
+            if (!operacionesValidas.includes(operacion)) {
+                return "Error: Operación no válida. Use: suma, resta, multiplicacion o division";
+            }
+            
+            // Convertir los parámetros a números de punto flotante para asegurar operaciones correctas
+            num1 = parseFloat(num1);
+            num2 = parseFloat(num2);
+            
+            // Validación: Verificar que los valores convertidos sean números válidos
+            if (isNaN(num1) || isNaN(num2)) {
+                return "Error: Por favor ingrese números válidos";
+            }
+            
+            // Variable para almacenar el resultado de la operación
+            let resultado;
+            
+            // ========================================
+            // ESTRUCTURA CONDICIONAL PARA OPERACIONES
+            // ========================================
+            
+            // Usar if...else if...else para determinar qué operación realizar
+            if (operacion === "suma") {
+                resultado = num1 + num2;        // Operación de suma
+            } else if (operacion === "resta") {
+                resultado = num1 - num2;        // Operación de resta
+            } else if (operacion === "multiplicacion") {
+                resultado = num1 * num2;        // Operación de multiplicación
+            } else if (operacion === "division") {
+                // Validación especial: Manejo de división por cero
+                if (num2 === 0) {
+                    return "Error: No se puede dividir por cero";
+                }
+                resultado = num1 / num2;        // Operación de división
+            }
+            
+            // Retornar el resultado calculado
+            return resultado;
+        }
+        
+        // ========================================
+        // FUNCIONES AUXILIARES PARA LA INTERFAZ
+        // ========================================
+        
+        /**
+         * Función que maneja el cálculo desde la interfaz HTML
+         * Obtiene los valores de los campos de entrada y llama a realizarOperacion()
+         */
+        function calcular() {
+            // Obtener valores de los campos de entrada del HTML
+            const num1 = document.getElementById('num1').value;    // Primer número del input
+            const num2 = document.getElementById('num2').value;    // Segundo número del input
+            const operacion = document.getElementById('operacion').value; // Operación seleccionada
+            
+            // Validar que todos los campos estén completos antes de calcular
+            if (!num1 || !num2 || !operacion) {
+                mostrarResultado("Por favor complete todos los campos", true);
+                return; // Salir de la función si faltan datos
+            }
+            
+            // Llamar a la función principal para realizar la operación
+            const resultado = realizarOperacion(num1, num2, operacion);
+            
+            // Crear texto descriptivo de la operación para el historial
+            const operacionTexto = `${num1} ${getOperacionSimbolo(operacion)} ${num2} = ${resultado}`;
+            historialOperaciones.push(operacionTexto); // Agregar al array del historial
+            actualizarHistorial(); // Actualizar la visualización del historial
+            
+            // Mostrar el resultado en pantalla (detectar si es error por el texto)
+            mostrarResultado(resultado, typeof resultado === 'string' && resultado.includes('Error'));
+        }
+        
+        /**
+         * Función auxiliar para convertir nombres de operaciones a símbolos matemáticos
+         * @param {string} operacion - Nombre de la operación
+         * @returns {string} - Símbolo matemático correspondiente
+         */
+        function getOperacionSimbolo(operacion) {
+            // Switch para convertir texto a símbolos matemáticos
+            switch(operacion) {
+                case 'suma': return '+';           // Suma → +
+                case 'resta': return '-';          // Resta → -
+                case 'multiplicacion': return '×'; // Multiplicación → ×
+                case 'division': return '÷';       // División → ÷
+                default: return '?';               // Operación desconocida → ?
+            }
+        }
+        
+        /**
+         * Función para mostrar el resultado en la interfaz
+         * @param {number|string} resultado - Resultado a mostrar
+         * @param {boolean} esError - Indica si el resultado es un error
+         */
+        function mostrarResultado(resultado, esError = false) {
+            // Obtener el elemento HTML donde mostrar el resultado
+            const divResultado = document.getElementById('resultado');
+            
+            // Aplicar clase CSS según si es error o resultado exitoso
+            divResultado.className = esError ? 'result error' : 'result';
+            
+            // Mostrar el resultado con íconos apropiados
+            divResultado.innerHTML = esError ? 
+                `❌ ${resultado}` :           // Mensaje de error con ícono X
+                `✅ Resultado: ${resultado}`; // Resultado exitoso con ícono de check
+        }
+        
+        /**
+         * Función para limpiar todos los campos de entrada y resultado
+         */
+        function limpiar() {
+            // Limpiar los campos de entrada estableciendo valores vacíos
+            document.getElementById('num1').value = '';      // Limpiar primer número
+            document.getElementById('num2').value = '';      // Limpiar segundo número
+            document.getElementById('operacion').value = ''; // Limpiar selección de operación
+            document.getElementById('resultado').innerHTML = ''; // Limpiar resultado mostrado
+        }
+        
+        /**
+         * Función para actualizar la visualización del historial de operaciones
+         */
+        function actualizarHistorial() {
+            // Obtener el elemento HTML donde mostrar el historial
+            const divHistorial = document.getElementById('historial');
+            divHistorial.innerHTML = ''; // Limpiar contenido anterior
+            
+            // Si no hay operaciones en el historial, mostrar mensaje informativo
+            if (historialOperaciones.length === 0) {
+                divHistorial.innerHTML = '<p>No hay operaciones realizadas aún.</p>';
+                return;
+            }
+            
+            // Recorrer todas las operaciones del historial y mostrarlas
+            historialOperaciones.forEach((operacion, index) => {
+                // Crear elemento div para cada operación
+                const divOperacion = document.createElement('div');
+                divOperacion.className = 'history-item'; // Aplicar estilo CSS
+                // Mostrar número de operación y la operación completa
+                divOperacion.innerHTML = `${index + 1}. ${operacion}`;
+                divHistorial.appendChild(divOperacion); // Agregar al historial visual
+            });
+        }
+        
+        // ========================================
+        // PASO 4: BUCLE PARA MÚLTIPLES OPERACIONES
+        // ========================================
+        
+        /**
+         * Función que implementa un bucle while para realizar múltiples operaciones
+         * Permite al usuario realizar operaciones de manera continua hasta escribir "salir"
+         */
+        function iniciarBucle() {
+            let continuar = true;    // Variable de control para el bucle while
+            let contador = 0;        // Contador para numerar las operaciones
+            
+            // Mensaje inicial informativo
+            alert("... Iniciando modo bucle. Use 'salir' en la operación para terminar.");
+            
+            // BUCLE WHILE: Continúa hasta que el usuario escriba "salir" o se alcance el límite
+            while (continuar && contador < 20) { // Límite de 20 operaciones por seguridad
+                contador++; // Incrementar contador de operaciones
+                
+                // ========================================
+                // SOLICITAR DATOS AL USUARIO CON PROMPT
+                // ========================================
+                
+                // Pedir primer número al usuario
+                let num1 = prompt(`Operación ${contador} - Ingrese el primer número:`);
+                if (num1 === null) break; // Si usuario cancela, salir del bucle
+                
+                // Pedir segundo número al usuario
+                let num2 = prompt(`Operación ${contador} - Ingrese el segundo número:`);
+                if (num2 === null) break; // Si usuario cancela, salir del bucle
+                
+                // Pedir tipo de operación al usuario
+                let operacion = prompt(`Operación ${contador} - Ingrese la operación (suma, resta, multiplicacion, division) o 'salir' para terminar:`);
+                if (operacion === null) break; // Si usuario cancela, salir del bucle
+                
+                // ========================================
+                // PASO 5: VERIFICAR CONDICIÓN DE SALIDA
+                // ========================================
+                
+                // Comprobar si el usuario quiere salir del bucle
+                if (operacion.toLowerCase() === "salir") {
+                    alert(":) ¡Gracias por usar la calculadora! Hasta luego.");
+                    continuar = false; // Cambiar variable de control
+                    break;            // Salir del bucle while
+                }
+                
+                // ========================================
+                // REALIZAR LA OPERACIÓN Y MOSTRAR RESULTADO
+                // ========================================
+                
+                // Llamar a la función principal para realizar la operación
+                const resultado = realizarOperacion(num1, num2, operacion.toLowerCase());
+                
+                // Mostrar resultado al usuario con alert
+                alert(` Resultado: ${num1} ${getOperacionSimbolo(operacion.toLowerCase())} ${num2} = ${resultado}`);
+                
+                // Agregar la operación al historial
+                const operacionTexto = `${num1} ${getOperacionSimbolo(operacion.toLowerCase())} ${num2} = ${resultado}`;
+                historialOperaciones.push(operacionTexto);
+                
+                // ========================================
+                // PREGUNTAR SI DESEA CONTINUAR
+                // ========================================
+                
+                // Preguntar al usuario si desea realizar otra operación
+                const seguir = confirm("¿Desea realizar otra operación?");
+                if (!seguir) {
+                    alert(":) ¡Gracias por usar la calculadora!");
+                    continuar = false; // Terminar el bucle
+                }
+            }
+            
+            // Actualizar el historial visual después de terminar el bucle
+            actualizarHistorial();
+        }
+        
+        // ========================================
+        // INICIALIZACIÓN DE LA APLICACIÓN
+        // ========================================
+        
+        /**
+         * Función que se ejecuta automáticamente cuando la página termina de cargar
+         * Inicializa la calculadora con valores de ejemplo y muestra información en consola
+         */
+        window.onload = function() {
+            // ========================================
+            // PASO 5: PRUEBAS DE LA CALCULADORA
+            // ========================================
+            
+            // Mostrar las variables iniciales en la consola del navegador para verificación
+            console.log("Variables iniciales declaradas en el Paso 1:");
+            console.log("numero1:", numero1);           // Mostrar primera variable
+            console.log("numero2:", numero2);           // Mostrar segunda variable
+            console.log("operacionInicial:", operacionInicial); // Mostrar operación inicial
+            
+            // Realizar una operación de prueba con las variables iniciales
+            const resultadoInicial = realizarOperacion(numero1, numero2, operacionInicial);
+            console.log(`Operación de prueba inicial: ${numero1} + ${numero2} = ${resultadoInicial}`);
+            
+            // Agregar la operación inicial al historial como ejemplo
+            historialOperaciones.push(`${numero1} + ${numero2} = ${resultadoInicial} (Ejemplo inicial)`);
+            actualizarHistorial(); // Mostrar el historial actualizado en pantalla
+            
+            // Mensaje de confirmación en consola
+            console.log("... Calculadora inicializada correctamente");
+            console.log(" Funcionalidades disponibles:");
+            console.log("   - Interfaz visual con campos de entrada");
+            console.log("   - Modo bucle interactivo con prompts");
+            console.log("   - Historial de operaciones");
+            console.log("   - Validaciones de entrada y errores");
+        };
+    </script>
+</body>
+</html>
